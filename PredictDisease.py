@@ -3,6 +3,7 @@ import re
 import os
 import pandas as pd
 import numpy as np
+from pydantic import BaseModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -16,6 +17,63 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.preprocessing import LabelEncoder
 from .Constants import *
+
+class Error(Exception):
+  ''' Base Class for other exceptions '''
+  pass
+
+class DatasetNotFound(Error):
+  ''' when dataset is not found on the desired path '''
+  def _init_(self, message="Dataset not found on given path!"):
+        self.message = message
+        super()._init_(self.message)
+
+class DatasetIsEmpty(Error):
+  ''' when dataset is empty '''
+  def _init_(self, message="Dataset is empty"):
+        self.message = message
+        super()._init_(self.message)
+
+class ModelNotFound(Error):
+  ''' when model is not found '''
+  def _init_(self, message="Model Not found on given path!"):
+        self.message = message
+        super()._init_(self.message)
+
+class ModelPathisEmpty(Error):
+  ''' when model path is empty '''
+  def _init_(self, message="Model path is empty!"):
+        self.message = message
+        super()._init_(self.message)
+
+class EncoderNotFound(Error):
+  ''' when encoder is not found '''
+  def _init_(self, message="Encoder Not found on given path!"):
+        self.message = message
+        super()._init_(self.message)
+
+class EncoderPathisEmpty(Error):
+  ''' when encoder path is empty '''
+  def _init_(self, message="Encoder path is empty!"):
+        self.message = message
+        super()._init_(self.message)
+
+class ModeNotDefinedforXY(Error):
+  ''' when the mode is not defined in _loadXY_ method '''
+  def _init(self, message="Mode is not defined in __loadXY_ method"):
+        self.message = message
+        super()._init_(self.message)
+        
+class DiseaseNotFound(Error):
+  ''' when disease is not found '''
+  def _init_(self, message="Disease Not found in the dataset!"):
+        self.message = message
+        super()._init_(self.message)
+
+class SymptomInput(BaseModel):
+    text: str 
+    
+
 class DiseasePredictionModel:
   # constructor
   def __init__(self, dataset_path, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL}, model_name=[DEFAULT_MODEL_NAME_1, DEFAULT_MODEL_NAME_2], encoder_path=DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORPER):
@@ -31,6 +89,8 @@ class DiseasePredictionModel:
     self.__model_name__ = model_name
     self.__dataset_path__ = dataset_path
     self.__model_path__ = model_path
+    self.__description__ = pd.read_csv(DEFAULT_SYMPTOMS_DESC)
+    self.__precautions__ = pd.read_csv(DEFAULT_SYMPTOMS_PREC)
     self.__regexpat = r"^(?:[a-zA-Z]:\\|/)?(?:[\w\-. ]+[/\\])*[\w\-. ]+$"
     self.__label_encoder__ = LabelEncoder()
     self.__encoder__ = joblib.load(encoder_path)
@@ -185,32 +245,67 @@ class DiseasePredictionModel:
 
     SYMPTOM_KEYWORDS = {"fever", "coughing", "cold", "fatigue", "chills", "nausea", "pain", "vomiting", "headache", "congestion", "shortness of breath"}
     for word in text.lower().split():
-        word_clean = word.strip(",.")
-        if word_clean in SYMPTOM_KEYWORDS and word_clean not in symptoms:
-            symptoms.append(word_clean)
+      word_clean = word.strip(",.")
+      if word_clean in SYMPTOM_KEYWORDS and word_clean not in symptoms:
+          symptoms.append(word_clean)
 
     new_symptoms = list(set(symptoms))
     b = self.predict(new_symptoms)
-    print(b)
-    return b
-    
+    lst = []
+    for i in b:
+      result = {}
+      result['disease'] = i
+      result['Descriptions'] = self.getDescriptions(i)
+      result['Precautions'] = self.getPrecautions(i) 
+      lst.append(result)
+    return lst
+  
+  # method for getting the precautions of the disease
+  def getPrecautions(self, disease):
+    try:
+      if disease not in self.__precautions__['Disease']:
+        raise DiseaseNotFound
+      else:
+        return self.__precautions__[self.__precautions__['Disease']==disease]['Precaution_1']['Precaution_2']  
+    except (DiseaseNotFound) as e:
+      self.error = {"location":"getPrecautions","message":e}
+      print(f"Error : '{e}' from {self.error['location']}")
+      return None
+  
+  # method for getting the description of the disease
+  def getDescriptions(self, disease):
+    try:
+      if disease not in self.__description__['Disease']:
+        raise DiseaseNotFound
+      else:
+        return self.__description__[self.__description__['Disease']==disease]   
+    except (DiseaseNotFound) as e:
+      self.error = {"location":"getPrecautions","message":e}
+      print(f"Error : '{e}' from {self.error['location']}")
+      return None
+  
   # method for finding the accuracy with accuracy_score
-  def accuracy(self):
-    prediction1 = self.__model_rf__.predict(self.__X_test)
-    prediction2 = self.__model_per__.predict(self.__X_test)
-    a = accuracy_score(self.__y_test, prediction1)
-    b = accuracy_score(self.__y_test, prediction2)
-    return [a, b]
+  def accuracy(self, mode='rf'):
+    if (mode=='rf'):
+      prediction1 = self.__model_rf__.predict(self.__X_test)
+      a = accuracy_score(self.__y_test, prediction1)
+      return a
+    elif (mode=='per'):
+      prediction2 = self.__model_per__.predict(self.__X_test)
+      b = accuracy_score(self.__y_test, prediction2)
+      return b
+    else:
+      return None
 
   # method for saving the model
   def saveModel(self):
     for i in self.__model_path__:
-        if i=='rf':
-          joblib.dump(self.__model_rf__, DEFAULT_SAVEDMODEL_PATH + self.__model_path__[i])
-        elif i=='per':
-          joblib.dump(self.__model_per__, DEFAULT_SAVEDMODEL_PATH + self.__model_path__[i])
-        else:
-          pass
+      if i=='rf':
+        joblib.dump(self.__model_rf__, DEFAULT_SAVEDMODEL_PATH + self.__model_path__[i])
+      elif i=='per':
+        joblib.dump(self.__model_per__, DEFAULT_SAVEDMODEL_PATH + self.__model_path__[i])
+      else:
+        pass
 
   # method for showing the model which are used
   def modelUsed(self):
@@ -223,3 +318,15 @@ class DiseasePredictionModel:
   # method for history
   def getHistory(self):
     return self.__history
+
+def predict_disease(input_data: SymptomInput):
+  obj = DiseasePredictionModel(
+      dataset_path=DEFAULT_PARENT_DIR + DEFAULT_DATASET_PATH + DEFAULT_DATASET_NAME,
+      model_path={
+          'rf': DEFAULT_SAVEDMODEL_PATH + DEFAULT_SAVEDMODEL_NAME,
+          'per': DEFAULT_SAVEDMODEL_PATH + DEFAULT_PERCEPTRON_MODEL
+      }
+  )
+  result = obj.getPredictionFromText(text=input_data.text)
+  
+  return result

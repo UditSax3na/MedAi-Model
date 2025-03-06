@@ -1,15 +1,16 @@
+import os
 # Default Paths and parameter for PredictDisease class
 HOST='127.0.0.1'
 PORT=8000
 RELOAD=True
 
-DEFAULT_PARENT_DIR = '/code/'
-DEFAULT_DATASET_PATH = 'Datasets/'
+DEFAULT_PARENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'\\'
+DEFAULT_DATASET_PATH = 'Datasets\\'
 DEFAULT_DATASET_NAME = 'disease_symptoms_binary.csv'
-DEFAULT_SAVEDMODEL_PATH = DEFAULT_PARENT_DIR+DEFAULT_DATASET_PATH+'SavedModelandEncoders/'
+DEFAULT_SAVEDMODEL_PATH = DEFAULT_PARENT_DIR+'SavedModelandEncoders\\'
 DEFAULT_SAVEDMODEL_NAME = 'RandomForestModel.joblib'
 DEFAULT_PERCEPTRON_MODEL = 'PerceptronModel.joblib'
-DEFAULT_ENCODER_PATH = DEFAULT_PARENT_DIR+DEFAULT_DATASET_PATH+'SavedModelandEncoders/'
+DEFAULT_ENCODER_PATH = DEFAULT_PARENT_DIR+'SavedModelandEncoders\\'
 DEFAULT_ENCODER_FORPER = 'PerceptronModelEncoder.pkl'
 DEFAULT_MODEL_NAME_1 = 'rf'
 DEFAULT_MODEL_NAME_2 = 'per'
@@ -30,3 +31,6 @@ DEFAULT_VERBOSE = 1
 DEFAULT_OPTIMIZER='adam'
 DEFAULT_LOSS='categorical_crossentropy'
 DEFAULT_METRICS=['accuracy']
+
+DEFAULT_SYMPTOMS_DESC = DEFAULT_PARENT_DIR+DEFAULT_DATASET_PATH+'symptom_Description.csv'
+DEFAULT_SYMPTOMS_PREC = DEFAULT_PARENT_DIR+DEFAULT_DATASET_PATH+'symptom_precaution.csv'

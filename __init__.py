@@ -1,15 +1,14 @@
-import joblib
-import numpy as np
-from pydantic import BaseModel
-from .Constants import *
-from .PredictDisease import *
+from fastapi import APIRouter
+from MedAiModelmain.PredictDisease import SymptomInput 
 
+router = APIRouter()
 
-class SymptomInput(BaseModel):
-    text: str 
+@router.get("/status")
+def TestingStatus():
+    return {"message": "API is live!"}
 
-def predict_disease(input_data: SymptomInput):
-    print(DEFAULT_PARENT_DIR)
-    obj = DiseasePredictionModel(dataset_path=DEFAULT_PARENT_DIR + DEFAULT_DATASET_PATH + DEFAULT_DATASET_NAME, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL})
-    result = obj.getPredictionFromText(text=input_data.text)
-    return result 
+@router.post("/predict")
+def Predict_disease(inputText: SymptomInput):
+    from MedAiModelmain.PredictDisease import predict_disease
+    result = predict_disease(SymptomInput(text=inputText.text))  
+    return {"result": result}
