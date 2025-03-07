@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from MedAiModelmain.PredictDisease import SymptomInput 
+from .PredictDisease import SymptomInput 
 
 router = APIRouter()
 
@@ -9,6 +9,6 @@ def TestingStatus():
 
 @router.post("/predict")
 def Predict_disease(inputText: SymptomInput):
-    from MedAiModelmain.PredictDisease import predict_disease
+    from .PredictDisease import predict_disease
     result = predict_disease(SymptomInput(text=inputText.text))  
     return {"result": result}

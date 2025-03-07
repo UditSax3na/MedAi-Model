@@ -16,6 +16,7 @@ from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.preprocessing import LabelEncoder
+from scipy.special import softmax
 from .Constants import *
 
 class Error(Exception):
@@ -76,11 +77,18 @@ class SymptomInput(BaseModel):
 
 class DiseasePredictionModel:
   # constructor
-  def __init__(self, dataset_path, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL}, model_name=[DEFAULT_MODEL_NAME_1, DEFAULT_MODEL_NAME_2], encoder_path=DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORPER):
+  def __init__(self, dataset_path, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL,'knn':DEFAULT_SAVEDMODEL_PATH+DEFAULT_KNN_MODEL,'nb':DEFAULT_SAVEDMODEL_PATH+DEFAULT_NAIVEBAYES_MODEL}, model_name=[DEFAULT_MODEL_NAME_1, DEFAULT_MODEL_NAME_2], encoder_path=DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORPER):
     self.error={}
+    self.weights = {
+      'rf': 0.4,  # Random Forest
+      'knn': 0.3,  # k-NN
+      'nb': 0.2,  # Naive Bayes
+      'mlp': 0.1   # Perceptron
+    }
     self.dataset = None
     self.__model_rf__ = None
-    self.__model_per__ = None
+    self.__model_knn__ = None
+    self.__model_nb__ = None
     self.__X_train = None
     self.__X_test = None
     self.__y_train = None
@@ -89,20 +97,16 @@ class DiseasePredictionModel:
     self.__model_name__ = model_name
     self.__dataset_path__ = dataset_path
     self.__model_path__ = model_path
-    self.__description__ = pd.read_csv(DEFAULT_SYMPTOMS_DESC)
-    self.__precautions__ = pd.read_csv(DEFAULT_SYMPTOMS_PREC)
+    self.__dpt__ = pd.read_csv(DEFAULT_SYMPTOMS_PREC_DESC)
     self.__regexpat = r"^(?:[a-zA-Z]:\\|/)?(?:[\w\-. ]+[/\\])*[\w\-. ]+$"
     self.__label_encoder__ = LabelEncoder()
+    self.__encoder_forrest__ = joblib.load(DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORREST)
     self.__encoder__ = joblib.load(encoder_path)
     self.__loadDataset__()
     self.__combined_symptoms__ = self.dataset.columns[1:]
 
     self.__ner_ = pipeline("ner", model=DEFAULT_NERMODEL, aggregation_strategy=DEFAULT_AGGREGATION_STRATEGY)
-    if not (None in self.__model_path__):
-      self.__loadModel__()
-    else:
-      self.__createModel__()
-      self.saveModel()
+    self.__loadModel__()
 
   # private methods
 
@@ -111,24 +115,11 @@ class DiseasePredictionModel:
     return bool(re.match(self.__regexpat,path))
 
   # method for loading the data according to the model in x and y 
-  def __loadXY__(self, mode='rf'):
-    try:
-      if mode=='rf':
-        self.X = self.dataset.drop(columns=["disease"], )
-        self.y = self.dataset["disease"]
-
-      elif mode=='per':
-        self.X = self.dataset.drop(columns=["disease"], axis=1)
-        self.y = self.dataset["disease"]
-        self.y = self.__encoder__.fit_transform(self.y.values.reshape(-1,1))
-        self.__trainTestSplit__()
-
-      else:
-        raise ModeNotDefinedforXY
-
-    except (ModeNotDefinedforXY) as e:
-      self.error = {"location":"__loadXY__","message":e}
-      print(f"Error : '{e}' from {self.error['location']}")
+  def __loadXY__(self):
+    self.X = self.dataset.drop(columns=["disease"], axis=1)
+    self.y = self.__encoder_forrest__.fit_transform(self.dataset["disease"])
+    self.__label_encoder__.fit(self.dataset["disease"])  # Ensure LabelEncoder is trained
+    self.__trainTestSplit__(X=self.X, y=self.y, mode='rf')
 
   # method for loading dataset
   def __loadDataset__(self):
@@ -150,12 +141,17 @@ class DiseasePredictionModel:
     try:
       if self.__is_path__(self.__model_path__[DEFAULT_MODEL_NAME_1]):
         self.__model_rf__ = joblib.load(self.__model_path__[DEFAULT_MODEL_NAME_1])
-        self.__loadXY__(mode=DEFAULT_MODEL_NAME_1)
+        self.__loadXY__()
       else:
         raise ModelPathisEmpty
-      if self.__is_path__(self.__model_path__[DEFAULT_MODEL_NAME_2]):
-        self.__model_per__ = joblib.load(self.__model_path__[DEFAULT_MODEL_NAME_2])
-        self.__loadXY__(mode=DEFAULT_MODEL_NAME_2)
+      if self.__is_path__(self.__model_path__[DEFAULT_MODEL_NAME_3]):
+        self.__model_knn__ = joblib.load(self.__model_path__[DEFAULT_MODEL_NAME_3])
+        self.__loadXY__()
+      else:
+        raise ModelPathisEmpty
+      if self.__is_path__(self.__model_path__[DEFAULT_MODEL_NAME_4]):
+        self.__model_nb__ = joblib.load(self.__model_path__[DEFAULT_MODEL_NAME_4])
+        self.__loadXY__()
       else:
         raise ModelPathisEmpty
     except (ModelPathisEmpty) as e:
@@ -164,9 +160,13 @@ class DiseasePredictionModel:
 
 
   # method for train test split
-  def __trainTestSplit__(self):
-    self.__X_train, self.__X_test, self.__y_train, self.__y_test = train_test_split(self.X, self.y, test_size=DEFAULT_TEST_SIZE, random_state=DEFAULT_RANDOM_STATE)
+  def __trainTestSplit__(self, X, y, mode='per'):
+    if mode=='per':
+      pass
+    else:
+      self.__X_train, self.__X_test, self.__y_train, self.__y_test = train_test_split(X, y, test_size=DEFAULT_TEST_SIZE, random_state=DEFAULT_RANDOM_STATE)
 
+  # deprecated method
   # method for creating a model
   def __createModel__(self):
     if 'rf' in self.__model_name__:
@@ -182,9 +182,9 @@ class DiseasePredictionModel:
         Dense(self.__y_train.shape[1], activation=DEFAULT_SECOND_ACTIVATION_FUNC)
       ])
       self.__model_per__.compile(
-          optimizer=DEFAULT_OPTIMIZER,
-          loss=DEFAULT_LOSS,
-          metrics=DEFAULT_METRICS
+        optimizer=DEFAULT_OPTIMIZER,
+        loss=DEFAULT_LOSS,
+        metrics=DEFAULT_METRICS
       )
       self.__history = self.__model_per__.fit(self.__X_train, self.__y_train, epochs=DEFAULT_EPOCHS, batch_size=DEFAULT_BATCH_SIZE, validation_split=DEFAULT_VALIDATION_SPLIT, verbose=DEFAULT_VERBOSE)
 
@@ -204,35 +204,45 @@ class DiseasePredictionModel:
   def predict(self, symptom):
     final = []
 
-    # separate
-    symptom_vector = np.zeros(len(self.X.columns))
-    for symptom2 in symptom:
-        if symptom2 in self.X.columns:
-            symptom_vector[self.X.columns.get_loc(symptom2)] = 1  # Find correct index
-
-    symptom_vector = symptom_vector.reshape(1, -1)
-    print(self.__model_per__)
-    prediction = self.__model_per__.predict(symptom_vector)
-
-    predicted_index = np.argmax(prediction, axis=1)[0]
-    disease_names = self.dataset['disease'].unique()
-
-    y_train_labels = np.argmax(self.__y_train, axis=1)
-
-    y_train_diseases = np.array([disease_names[idx] for idx in y_train_labels])
-    self.__label_encoder__.fit(y_train_diseases)
-
-    predicted_disease_pc = self.__label_encoder__.inverse_transform([predicted_index])
-    final.append(predicted_disease_pc[0])
-
+    # Prepare the symptom vector for Random Forest, k-NN, and Naive Bayes
     new_symptoms_dict = {}
     for symptom1 in self.__combined_symptoms__:
         new_symptoms_dict[symptom1] = 1 if symptom1 in symptom else 0
     X_new = pd.DataFrame([new_symptoms_dict])
-    predicted_disease_rf = self.__model_rf__.predict(X_new)
-    final.append(predicted_disease_rf[0])
 
-    return final
+    # Get predictions from Random Forest, k-NN, and Naive Bayes
+    predicted_disease_rf = self.__model_rf__.predict(X_new)[0]
+    predicted_disease_knn = self.__model_knn__.predict(X_new)[0]
+    predicted_disease_nb = self.__model_nb__.predict(X_new)[0]
+
+    final.append(predicted_disease_rf)
+    final.append(predicted_disease_knn)
+    final.append(predicted_disease_nb)
+
+    # Get predicted probabilities from each model
+    y_proba_rf = self.__model_rf__.predict_proba(X_new)
+    y_proba_knn = self.__model_knn__.predict_proba(X_new)
+    y_proba_nb = self.__model_nb__.predict_proba(X_new)
+    
+    # Combine probabilities using weighted averaging
+    weights = {
+      'rf': 0.5,  # Random Forest
+      'knn': 0.3,  # k-NN
+      'nb': 0.2   # Naive Bayes
+    }
+
+    y_proba_ensemble = (
+      weights['rf'] * y_proba_rf +
+      weights['knn'] * y_proba_knn +
+      weights['nb'] * y_proba_nb
+    )
+
+    # Get the final predicted class
+    y_pred_ensemble = np.argmax(y_proba_ensemble, axis=1)[0]
+    predicted_disease_ensemble = self.__label_encoder__.inverse_transform([y_pred_ensemble])[0]
+
+    # Return the final prediction
+    return predicted_disease_ensemble
 
   def getPredictionFromText(self, text):
     entities = self.__ner_(text)
@@ -247,43 +257,28 @@ class DiseasePredictionModel:
     for word in text.lower().split():
       word_clean = word.strip(",.")
       if word_clean in SYMPTOM_KEYWORDS and word_clean not in symptoms:
-          symptoms.append(word_clean)
+        symptoms.append(word_clean)
 
     new_symptoms = list(set(symptoms))
     b = self.predict(new_symptoms)
-    lst = []
-    for i in b:
-      result = {}
-      result['disease'] = i
-      result['Descriptions'] = self.getDescriptions(i)
-      result['Precautions'] = self.getPrecautions(i) 
-      lst.append(result)
-    return lst
+    output = self.get_disease_info(b, self.__dpt__)
+    return output
   
-  # method for getting the precautions of the disease
-  def getPrecautions(self, disease):
-    try:
-      if disease not in self.__precautions__['Disease']:
-        raise DiseaseNotFound
-      else:
-        return self.__precautions__[self.__precautions__['Disease']==disease]['Precaution_1']['Precaution_2']  
-    except (DiseaseNotFound) as e:
-      self.error = {"location":"getPrecautions","message":e}
-      print(f"Error : '{e}' from {self.error['location']}")
-      return None
-  
-  # method for getting the description of the disease
-  def getDescriptions(self, disease):
-    try:
-      if disease not in self.__description__['Disease']:
-        raise DiseaseNotFound
-      else:
-        return self.__description__[self.__description__['Disease']==disease]   
-    except (DiseaseNotFound) as e:
-      self.error = {"location":"getPrecautions","message":e}
-      print(f"Error : '{e}' from {self.error['location']}")
-      return None
-  
+  def get_disease_info(self,disease_name, df):
+    disease_data = df[df['Disease'].str.lower() == disease_name.lower()]
+    
+    if disease_data.empty:
+      return {"Error": "Disease not found in the dataset."}
+    
+    precautions = disease_data[disease_data['Type'] == 'Precaution']['Precaution/Treatment'].tolist()
+    treatments = disease_data[disease_data['Type'] == 'Treatment']['Precaution/Treatment'].tolist()
+    
+    return {
+      "Disease": disease_name,
+      "Precautions": precautions if precautions else ["No precautions listed"],
+      "Treatments": treatments if treatments else ["No treatments listed"]
+    }
+
   # method for finding the accuracy with accuracy_score
   def accuracy(self, mode='rf'):
     if (mode=='rf'):
@@ -322,10 +317,7 @@ class DiseasePredictionModel:
 def predict_disease(input_data: SymptomInput):
   obj = DiseasePredictionModel(
       dataset_path=DEFAULT_PARENT_DIR + DEFAULT_DATASET_PATH + DEFAULT_DATASET_NAME,
-      model_path={
-          'rf': DEFAULT_SAVEDMODEL_PATH + DEFAULT_SAVEDMODEL_NAME,
-          'per': DEFAULT_SAVEDMODEL_PATH + DEFAULT_PERCEPTRON_MODEL
-      }
+      model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL,'knn':DEFAULT_SAVEDMODEL_PATH+DEFAULT_KNN_MODEL,'nb':DEFAULT_SAVEDMODEL_PATH+DEFAULT_NAIVEBAYES_MODEL}
   )
   result = obj.getPredictionFromText(text=input_data.text)
   
