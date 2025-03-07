@@ -6,17 +6,13 @@ import numpy as np
 from pydantic import BaseModel
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from deep_translator import GoogleTranslator
 from langdetect import detect
 from transformers import pipeline
-from sklearn.preprocessing import OneHotEncoder
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
-from scipy.special import softmax
+from sklearn.naive_bayes import GaussianNB
 from .Constants import *
 
 class Error(Exception):
@@ -77,14 +73,8 @@ class SymptomInput(BaseModel):
 
 class DiseasePredictionModel:
   # constructor
-  def __init__(self, dataset_path, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL,'knn':DEFAULT_SAVEDMODEL_PATH+DEFAULT_KNN_MODEL,'nb':DEFAULT_SAVEDMODEL_PATH+DEFAULT_NAIVEBAYES_MODEL}, model_name=[DEFAULT_MODEL_NAME_1, DEFAULT_MODEL_NAME_2], encoder_path=DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORPER):
+  def __init__(self, dataset_path, model_path={'rf':DEFAULT_SAVEDMODEL_PATH+DEFAULT_SAVEDMODEL_NAME,'per':DEFAULT_SAVEDMODEL_PATH+DEFAULT_PERCEPTRON_MODEL,'knn':DEFAULT_SAVEDMODEL_PATH+DEFAULT_KNN_MODEL,'nb':DEFAULT_SAVEDMODEL_PATH+DEFAULT_NAIVEBAYES_MODEL}, model_name=[DEFAULT_MODEL_NAME_1, DEFAULT_MODEL_NAME_3,DEFAULT_MODEL_NAME_4]):
     self.error={}
-    self.weights = {
-      'rf': 0.4,  # Random Forest
-      'knn': 0.3,  # k-NN
-      'nb': 0.2,  # Naive Bayes
-      'mlp': 0.1   # Perceptron
-    }
     self.dataset = None
     self.__model_rf__ = None
     self.__model_knn__ = None
@@ -101,12 +91,14 @@ class DiseasePredictionModel:
     self.__regexpat = r"^(?:[a-zA-Z]:\\|/)?(?:[\w\-. ]+[/\\])*[\w\-. ]+$"
     self.__label_encoder__ = LabelEncoder()
     self.__encoder_forrest__ = joblib.load(DEFAULT_ENCODER_PATH+DEFAULT_ENCODER_FORREST)
-    self.__encoder__ = joblib.load(encoder_path)
     self.__loadDataset__()
     self.__combined_symptoms__ = self.dataset.columns[1:]
 
     self.__ner_ = pipeline("ner", model=DEFAULT_NERMODEL, aggregation_strategy=DEFAULT_AGGREGATION_STRATEGY)
-    self.__loadModel__()
+    if not os.path.exists(self.__model_path__):
+      self.__createModel__()
+    else:
+      self.__loadModel__()
 
   # private methods
 
@@ -166,27 +158,22 @@ class DiseasePredictionModel:
     else:
       self.__X_train, self.__X_test, self.__y_train, self.__y_test = train_test_split(X, y, test_size=DEFAULT_TEST_SIZE, random_state=DEFAULT_RANDOM_STATE)
 
-  # deprecated method
   # method for creating a model
   def __createModel__(self):
     if 'rf' in self.__model_name__:
       self.__loadXY__(mode='rf')
-      self.__model_rf__ = RandomForestClassifier(n_estimators=DEFAULT_N_ESTIMATERS, random_state=DEFAULT_RANDOM_STATE)
+      self.__model_rf__ = RandomForestClassifier(n_jobs=DEFAULT_N_JOBS, random_state=DEFAULT_RANDOM_STATE)
       self.__model_rf__.fit(self.__X_train, self.__y_train)
 
-    if 'per' in self.__model_name__:
-      self.__loadXY__(mode='per')
-      self.__model_per__ = Sequential([
-        Dense(DEFAULT_DENSE_LAYER_1, input_shape=(self.__X_train.shape[1],), activation=DEFAULT_FIRST_ACTIVATION_FUNC),
-        Dense(10, activation=DEFAULT_FIRST_ACTIVATION_FUNC),
-        Dense(self.__y_train.shape[1], activation=DEFAULT_SECOND_ACTIVATION_FUNC)
-      ])
-      self.__model_per__.compile(
-        optimizer=DEFAULT_OPTIMIZER,
-        loss=DEFAULT_LOSS,
-        metrics=DEFAULT_METRICS
-      )
-      self.__history = self.__model_per__.fit(self.__X_train, self.__y_train, epochs=DEFAULT_EPOCHS, batch_size=DEFAULT_BATCH_SIZE, validation_split=DEFAULT_VALIDATION_SPLIT, verbose=DEFAULT_VERBOSE)
+    if 'knn' in self.__model_name__:
+      self.__loadXY__(mode='rf')
+      self.__model_knn__ = KNeighborsClassifier(n_neighbors=DEFAULT_N_NEIGHOURS, n_jobs=DEFAULT_N_JOBS)
+      self.__model_knn__.fit(self.__X_train, self.__y_train)
+
+    if 'nb' in self.__model_name__:
+      self.__loadXY__(mode='rf')
+      self.__model_nb__ = GaussianNB()
+      self.__model_nb__.fit(self.__X_train, self.__y_train)
 
   # method for GetEntites from text
   def __getEntities_(self, text):
@@ -214,35 +201,12 @@ class DiseasePredictionModel:
     predicted_disease_rf = self.__model_rf__.predict(X_new)[0]
     predicted_disease_knn = self.__model_knn__.predict(X_new)[0]
     predicted_disease_nb = self.__model_nb__.predict(X_new)[0]
-
+    predicted_disease_rf = self.__label_encoder__.inverse_transform([self.__model_rf__.predict(X_new)[0]])[0]
+    predicted_disease_knn = self.__label_encoder__.inverse_transform([self.__model_knn__.predict(X_new)[0]])[0]
     final.append(predicted_disease_rf)
     final.append(predicted_disease_knn)
     final.append(predicted_disease_nb)
-
-    # Get predicted probabilities from each model
-    y_proba_rf = self.__model_rf__.predict_proba(X_new)
-    y_proba_knn = self.__model_knn__.predict_proba(X_new)
-    y_proba_nb = self.__model_nb__.predict_proba(X_new)
-    
-    # Combine probabilities using weighted averaging
-    weights = {
-      'rf': 0.5,  # Random Forest
-      'knn': 0.3,  # k-NN
-      'nb': 0.2   # Naive Bayes
-    }
-
-    y_proba_ensemble = (
-      weights['rf'] * y_proba_rf +
-      weights['knn'] * y_proba_knn +
-      weights['nb'] * y_proba_nb
-    )
-
-    # Get the final predicted class
-    y_pred_ensemble = np.argmax(y_proba_ensemble, axis=1)[0]
-    predicted_disease_ensemble = self.__label_encoder__.inverse_transform([y_pred_ensemble])[0]
-
-    # Return the final prediction
-    return predicted_disease_ensemble
+    return final
 
   def getPredictionFromText(self, text):
     entities = self.__ner_(text)
@@ -261,8 +225,11 @@ class DiseasePredictionModel:
 
     new_symptoms = list(set(symptoms))
     b = self.predict(new_symptoms)
-    output = self.get_disease_info(b, self.__dpt__)
-    return output
+    lst = []
+    for i in b:
+      output = self.get_disease_info(i, self.__dpt__)
+      lst.append(output)
+    return lst
   
   def get_disease_info(self,disease_name, df):
     disease_data = df[df['Disease'].str.lower() == disease_name.lower()]

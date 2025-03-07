@@ -2,10 +2,7 @@ __pycache__/
 Constants/__pycache__/
 
 .gitattributes
+/SavedModelandEncoders/RandomForestModel.pkl
+/SavedModelandEncoders/knn_model.pkl
 
-Datasets/*.csv__pycache__/
-Constants/__pycache__/
-
-.gitattributes
-
-Datasets/*.csv
+Datasets/disease_symptoms_binary.csv

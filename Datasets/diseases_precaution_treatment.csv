@@ -1,0 +1,350 @@
+Disease,Precaution/Treatment,Type
+Influenza,Annual flu vaccination,Precaution
+Influenza,Regular hand washing with soap,Precaution
+Influenza,Avoid close contact with sick individuals,Precaution
+Influenza,Cover mouth and nose when coughing or sneezing,Precaution
+Influenza,Disinfect frequently touched surfaces,Precaution
+Influenza,"Antiviral medications (e.g., oseltamivir)",Treatment
+Influenza,Rest,Treatment
+Influenza,Increased fluid intake,Treatment
+Influenza,"Over-the-counter pain relievers (e.g., ibuprofen, acetaminophen)",Treatment
+Diabetes Mellitus,Maintain a healthy diet,Precaution
+Diabetes Mellitus,Regular physical activity,Precaution
+Diabetes Mellitus,Regular blood sugar monitoring,Precaution
+Diabetes Mellitus,Avoid tobacco use,Precaution
+Diabetes Mellitus,Regular medical check-ups,Precaution
+Diabetes Mellitus,Insulin therapy,Treatment
+Diabetes Mellitus,Oral hypoglycemic agents,Treatment
+Diabetes Mellitus,Lifestyle modifications (diet and exercise),Treatment
+Diabetes Mellitus,Regular monitoring of blood glucose levels,Treatment
+Hypertension,Maintain a healthy weight,Precaution
+Hypertension,Engage in regular physical activity,Precaution
+Hypertension,Limit alcohol intake,Precaution
+Hypertension,Reduce sodium intake,Precaution
+Hypertension,Avoid tobacco use,Precaution
+Hypertension,"Antihypertensive medications (e.g., ACE inhibitors, beta-blockers)",Treatment
+Hypertension,Lifestyle modifications (diet and exercise),Treatment
+Hypertension,Regular blood pressure monitoring,Treatment
+Hypertension,Stress management techniques,Treatment
+Asthma,Identify and avoid asthma triggers,Precaution
+Asthma,Regular use of prescribed preventive inhalers,Precaution
+Asthma,Regular monitoring of lung function,Precaution
+Asthma,Receive annual flu vaccination,Precaution
+Asthma,Develop an asthma action plan with a healthcare provider,Precaution
+Asthma,Inhaled corticosteroids,Treatment
+Asthma,Long-acting beta agonists,Treatment
+Asthma,Leukotriene modifiers,Treatment
+Asthma,Short-acting beta agonists for quick relief,Treatment
+Asthma,Oral corticosteroids for severe exacerbations,Treatment
+Tuberculosis,Avoid close contact with individuals known to have active TB,Precaution
+Tuberculosis,Ensure proper ventilation in living spaces,Precaution
+Tuberculosis,"Use protective measures (e.g., masks) when caring for TB patients",Precaution
+Tuberculosis,Regular screening for those at high risk,Precaution
+Tuberculosis,Complete the full course of TB vaccination (BCG vaccine where applicable),Precaution
+Tuberculosis,"Combination antibiotic therapy (e.g., isoniazid, rifampin, ethambutol, pyrazinamide)",Treatment
+Tuberculosis,Strict adherence to the prescribed medication regimen,Treatment
+Tuberculosis,Regular follow-up with healthcare providers,Treatment
+Tuberculosis,Supportive care for side effects,Treatment
+Tuberculosis,Isolation during the initial phase of treatment to prevent spread,Treatment
+COVID-19,Regular hand washing with soap and water,Precaution
+COVID-19,Wearing masks in public settings,Precaution
+COVID-19,Maintaining physical distance from others,Precaution
+COVID-19,Avoiding large gatherings,Precaution
+COVID-19,Regular cleaning and disinfecting of surfaces,Precaution
+COVID-19,Getting vaccinated and staying up-to-date with booster shots,Precaution
+COVID-19,Supportive care to relieve symptoms,Treatment
+COVID-19,"Antiviral medications (e.g., remdesivir) for severe cases",Treatment
+COVID-19,Use of supplemental oxygen for patients with low oxygen levels,Treatment
+COVID-19,Monoclonal antibody treatments for certain cases,Treatment
+COVID-19,Hospitalization and advanced supportive care for critical cases,Treatment
+Malaria,Use of insect repellent containing DEET,Precaution
+Malaria,Sleeping under insecticide-treated bed nets,Precaution
+Malaria,Taking prophylactic antimalarial medications when traveling to endemic areas,Precaution
+Malaria,Wearing protective clothing to reduce mosquito bites,Precaution
+Malaria,Ensuring proper screening of windows and doors to prevent mosquito entry,Precaution
+Malaria,"Antimalarial medications (e.g., chloroquine, artemisinin-based combination therapies)",Treatment
+Malaria,Hospitalization in severe cases for supportive care,Treatment
+Malaria,Regular monitoring of blood to assess treatment effectiveness,Treatment
+Malaria,Addressing complications such as anemia or organ failure promptly,Treatment
+Malaria,Ensuring complete adherence to the prescribed medication regimen,Treatment
+Dengue,Use mosquito repellents,Precaution
+Dengue,Wear protective clothing,Precaution
+Dengue,Avoid stagnant water,Precaution
+Dengue,Use mosquito nets,Precaution
+Dengue,Supportive care,Treatment
+Dengue,Hydration therapy,Treatment
+Dengue,Pain relievers,Treatment
+Dengue,Hospitalization in severe cases,Treatment
+Cholera,Drink clean water,Precaution
+Cholera,Proper sanitation,Precaution
+Cholera,Cook food thoroughly,Precaution
+Cholera,Regular hand washing,Precaution
+Cholera,Oral rehydration therapy,Treatment
+Cholera,Intravenous fluids,Treatment
+Cholera,Antibiotics in severe cases,Treatment
+Pneumonia,Get vaccinated,Precaution
+Pneumonia,Avoid smoking,Precaution
+Pneumonia,Maintain good hygiene,Precaution
+Pneumonia,Stay away from sick individuals,Precaution
+Pneumonia,Antibiotics (bacterial pneumonia),Treatment
+Pneumonia,Oxygen therapy,Treatment
+Pneumonia,Cough medicine,Treatment
+Pneumonia,Rest and fluids,Treatment
+urinary tract infection,Drink plenty of water,Precaution
+urinary tract infection,Urinate frequently,Precaution
+urinary tract infection,Maintain proper hygiene,Precaution
+urinary tract infection,Avoid holding urine for too long,Precaution
+urinary tract infection,Wear breathable cotton underwear,Precaution
+urinary tract infection,Avoid irritants like caffeine and alcohol,Precaution
+urinary tract infection,Wipe from front to back after using the toilet,Precaution
+urinary tract infection,Take showers instead of baths,Precaution
+urinary tract infection,Antibiotic therapy,Treatment
+urinary tract infection,Increased fluid intake,Treatment
+urinary tract infection,Pain relievers,Treatment
+urinary tract infection,Cranberry juice or supplements,Treatment
+urinary tract infection,Avoiding bladder irritants,Treatment
+urinary tract infection,Proper hygiene practices,Treatment
+hyperthyroidism,Limit iodine-rich foods,Precaution
+hyperthyroidism,Manage stress effectively,Precaution
+hyperthyroidism,Avoid caffeine and stimulants,Precaution
+hyperthyroidism,Regular thyroid check-ups,Precaution
+hyperthyroidism,Maintain a balanced diet,Precaution
+hyperthyroidism,Get enough sleep,Precaution
+hyperthyroidism,Avoid smoking and alcohol,Precaution
+hyperthyroidism,Antithyroid medications,Treatment
+hyperthyroidism,Beta-blockers for heart rate control,Treatment
+hyperthyroidism,Radioactive iodine therapy,Treatment
+hyperthyroidism,Surgery (thyroidectomy) in severe cases,Treatment
+hyperthyroidism,Lifestyle modifications,Treatment
+typhoid,Drink clean and boiled water,Precaution
+typhoid,Maintain proper sanitation,Precaution
+typhoid,Wash hands regularly,Precaution
+typhoid,Avoid street food and raw vegetables,Precaution
+typhoid,Get vaccinated against typhoid,Precaution
+typhoid,Practice good food hygiene,Precaution
+typhoid,Antibiotic therapy,Treatment
+typhoid,Hydration and electrolyte balance,Treatment
+typhoid,Rest and proper nutrition,Treatment
+typhoid,Fever management with medication,Treatment
+typhoid,Hospitalization in severe cases,Treatment
+Fungal Infection,Keep skin clean and dry,Precaution
+Fungal Infection,Wear breathable fabrics,Precaution
+Fungal Infection,Avoid sharing personal items,Precaution
+Fungal Infection,Use antifungal powders or creams,Precaution
+Fungal Infection,Change socks and underwear regularly,Precaution
+Fungal Infection,Antifungal creams or ointments,Treatment
+Fungal Infection,Oral antifungal medications,Treatment
+Fungal Infection,Maintain hygiene,Treatment
+Fungal Infection,Avoid damp environments,Treatment
+Bronchial Asthma,Avoid allergens,Precaution
+Bronchial Asthma,Use air purifiers,Precaution
+Bronchial Asthma,Wear a mask in polluted areas,Precaution
+Bronchial Asthma,Take prescribed inhalers,Precaution
+Bronchial Asthma,Exercise regularly,Precaution
+Bronchial Asthma,Inhaled corticosteroids,Treatment
+Bronchial Asthma,Bronchodilators,Treatment
+Bronchial Asthma,Leukotriene modifiers,Treatment
+Bronchial Asthma,Oxygen therapy in severe cases,Treatment
+Alcoholic Hepatitis,Avoid alcohol,Precaution
+Alcoholic Hepatitis,Maintain a healthy diet,Precaution
+Alcoholic Hepatitis,Stay hydrated,Precaution
+Alcoholic Hepatitis,Monitor liver health,Precaution
+Alcoholic Hepatitis,Avoid liver-damaging medications,Precaution
+Alcoholic Hepatitis,Abstinence from alcohol,Treatment
+Alcoholic Hepatitis,Nutritional therapy,Treatment
+Alcoholic Hepatitis,Medications to reduce liver inflammation,Treatment
+Alcoholic Hepatitis,Liver transplant in severe cases,Treatment
+Jaundice,Avoid contaminated water and food,Precaution
+Jaundice,Maintain proper hygiene,Precaution
+Jaundice,Limit alcohol intake,Precaution
+Jaundice,Get vaccinated for Hepatitis,Precaution
+Jaundice,Hydration therapy,Treatment
+Jaundice,Rest and proper nutrition,Treatment
+Jaundice,Medications for underlying causes,Treatment
+Jaundice,Avoid alcohol and fatty foods,Treatment
+Heart Attack,Maintain a healthy diet,Precaution
+Heart Attack,Exercise regularly,Precaution
+Heart Attack,Avoid smoking,Precaution
+Heart Attack,Monitor blood pressure and cholesterol levels,Precaution
+Heart Attack,Aspirin therapy,Treatment
+Heart Attack,Angioplasty,Treatment
+Heart Attack,Heart medications,Treatment
+Heart Attack,Lifestyle modifications,Treatment
+Arthritis,Maintain a healthy weight,Precaution
+Arthritis,Exercise regularly,Precaution
+Arthritis,Avoid excessive joint stress,Precaution
+Arthritis,Consume an anti-inflammatory diet,Precaution
+Arthritis,Pain relievers,Treatment
+Arthritis,Physical therapy,Treatment
+Arthritis,Joint replacement surgery,Treatment
+Arthritis,Lifestyle changes,Treatment
+Gastroenteritis,Wash hands regularly,Precaution
+Gastroenteritis,Avoid contaminated food and water,Precaution
+Gastroenteritis,Maintain hygiene,Precaution
+Gastroenteritis,Properly cook food,Precaution
+Gastroenteritis,Rehydration therapy,Treatment
+Gastroenteritis,Antidiarrheal medications,Treatment
+Gastroenteritis,Rest,Treatment
+Gastroenteritis,Probiotics,Treatment
+Varicose Veins,Avoid prolonged standing,Precaution
+Varicose Veins,Exercise regularly,Precaution
+Varicose Veins,Maintain a healthy weight,Precaution
+Varicose Veins,Wear compression stockings,Precaution
+Varicose Veins,Sclerotherapy,Treatment
+Varicose Veins,Laser treatments,Treatment
+Varicose Veins,Vein stripping surgery,Treatment
+Varicose Veins,Lifestyle changes,Treatment
+AIDS,Practice safe sex,Precaution
+AIDS,Avoid sharing needles,Precaution
+AIDS,Get regular health check-ups,Precaution
+AIDS,Take antiretroviral therapy,Precaution
+AIDS,Antiretroviral therapy (ART),Treatment
+AIDS,Healthy diet,Treatment
+AIDS,Regular medical check-ups,Treatment
+AIDS,Manage opportunistic infections,Treatment
+Brain Hemorrhage,Monitor blood pressure,Precaution
+Brain Hemorrhage,Maintain a healthy lifestyle,Precaution
+Brain Hemorrhage,Avoid smoking and alcohol,Precaution
+Brain Hemorrhage,Recognize early warning signs,Precaution
+Brain Hemorrhage,Physical therapy,Treatment
+Brain Hemorrhage,Speech therapy,Treatment
+Brain Hemorrhage,Medications,Treatment
+Brain Hemorrhage,Surgery in severe cases,Treatment
+Cervical Spondylosis,Maintain good posture,Precaution
+Cervical Spondylosis,Use ergonomic furniture,Precaution
+Cervical Spondylosis,Regular exercise,Precaution
+Cervical Spondylosis,Avoid heavy lifting,Precaution
+Cervical Spondylosis,Pain relievers,Treatment
+Cervical Spondylosis,Physiotherapy,Treatment
+Cervical Spondylosis,Neck braces,Treatment
+Cervical Spondylosis,Surgical intervention in severe cases,Treatment
+Chicken Pox,Get vaccinated,Precaution
+Chicken Pox,Avoid contact with infected individuals,Precaution
+Chicken Pox,Maintain hygiene,Precaution
+Chicken Pox,Isolate during infection period,Precaution
+Chicken Pox,Antiviral medications,Treatment
+Chicken Pox,Calamine lotion,Treatment
+Chicken Pox,Antihistamines,Treatment
+Chicken Pox,Rest and hydration,Treatment
+Common Cold,Wash hands frequently,Precaution
+Common Cold,Avoid close contact with infected people,Precaution
+Common Cold,Boost immunity with a healthy diet,Precaution
+Common Cold,Cover nose and mouth when sneezing,Precaution
+Common Cold,Rest,Treatment
+Common Cold,Hydration,Treatment
+Common Cold,Over-the-counter cold medications,Treatment
+Common Cold,Steam inhalation,Treatment
+Dimorphic Hemorrhoids (Piles),Consume fiber-rich foods,Precaution
+Dimorphic Hemorrhoids (Piles),Drink plenty of water,Precaution
+Dimorphic Hemorrhoids (Piles),Avoid prolonged sitting,Precaution
+Dimorphic Hemorrhoids (Piles),Exercise regularly,Precaution
+Dimorphic Hemorrhoids (Piles),Topical creams,Treatment
+Dimorphic Hemorrhoids (Piles),Minimally invasive procedures,Treatment
+Dimorphic Hemorrhoids (Piles),Surgical removal in severe cases,Treatment
+Peptic Ulcer Disease,Avoid spicy foods,Precaution
+Peptic Ulcer Disease,Limit NSAID use,Precaution
+Peptic Ulcer Disease,Reduce alcohol intake,Precaution
+Peptic Ulcer Disease,Manage stress,Precaution
+Peptic Ulcer Disease,Antacids,Treatment
+Peptic Ulcer Disease,Proton pump inhibitors,Treatment
+Peptic Ulcer Disease,H. pylori eradication therapy,Treatment
+Peptic Ulcer Disease,Dietary changes,Treatment
+Impetigo,Maintain proper hygiene,Precaution
+Impetigo,Avoid touching sores,Precaution
+Impetigo,Wash hands frequently,Precaution
+Impetigo,Use clean towels and clothes,Precaution
+Impetigo,Antibiotic ointments,Treatment
+Impetigo,Oral antibiotics,Treatment
+Impetigo,Keep affected areas clean,Treatment
+Acne,Wash face regularly,Precaution
+Acne,Avoid touching face,Precaution
+Acne,Use non-comedogenic products,Precaution
+Acne,Stay hydrated,Precaution
+Acne,Topical creams,Treatment
+Acne,Oral medications,Treatment
+Acne,Laser therapy,Treatment
+Acne,Chemical peels,Treatment
+(Vertigo) Paroxysmal Positional Vertigo,Avoid sudden head movements,Precaution
+(Vertigo) Paroxysmal Positional Vertigo,Get up slowly from bed,Precaution
+(Vertigo) Paroxysmal Positional Vertigo,Use a pillow to keep head elevated,Precaution
+(Vertigo) Paroxysmal Positional Vertigo,Stay hydrated,Precaution
+(Vertigo) Paroxysmal Positional Vertigo,Epley maneuver,Treatment
+(Vertigo) Paroxysmal Positional Vertigo,Vestibular rehabilitation therapy,Treatment
+(Vertigo) Paroxysmal Positional Vertigo,Medications for nausea and dizziness,Treatment
+Osteoarthritis,Maintain a healthy weight,Precaution
+Osteoarthritis,Engage in low-impact exercises,Precaution
+Osteoarthritis,Use ergonomic furniture,Precaution
+Osteoarthritis,Avoid overuse of joints,Precaution
+Osteoarthritis,Pain relievers,Treatment
+Osteoarthritis,Physical therapy,Treatment
+Osteoarthritis,Joint injections,Treatment
+Osteoarthritis,Surgical joint replacement,Treatment
+Hepatitis A,Get vaccinated,Precaution
+Hepatitis A,Avoid contaminated food and water,Precaution
+Hepatitis A,Wash hands regularly,Precaution
+Hepatitis A,Maintain hygiene,Precaution
+Hepatitis A,Supportive care,Treatment
+Hepatitis A,Rest and proper hydration,Treatment
+Hepatitis A,Avoid alcohol,Treatment
+Hepatitis A,Healthy diet,Treatment
+Chronic Cholestasis,Avoid alcohol,Precaution
+Chronic Cholestasis,Follow a low-fat diet,Precaution
+Chronic Cholestasis,Stay hydrated,Precaution
+Chronic Cholestasis,Regular liver check-ups,Precaution
+Chronic Cholestasis,Medications to improve bile flow,Treatment
+Chronic Cholestasis,Vitamin supplementation,Treatment
+Chronic Cholestasis,Liver transplant in severe cases,Treatment
+GERD (Gastroesophageal Reflux Disease),Avoid spicy and acidic foods,Precaution
+GERD (Gastroesophageal Reflux Disease),Eat smaller meals,Precaution
+GERD (Gastroesophageal Reflux Disease),Don't lie down immediately after eating,Precaution
+GERD (Gastroesophageal Reflux Disease),Maintain a healthy weight,Precaution
+GERD (Gastroesophageal Reflux Disease),Antacids,Treatment
+GERD (Gastroesophageal Reflux Disease),Proton pump inhibitors,Treatment
+GERD (Gastroesophageal Reflux Disease),Lifestyle modifications,Treatment
+GERD (Gastroesophageal Reflux Disease),Surgery in severe cases,Treatment
+Psoriasis,Keep skin moisturized,Precaution
+Psoriasis,Avoid triggers like stress and smoking,Precaution
+Psoriasis,Maintain a healthy diet,Precaution
+Psoriasis,Use gentle skincare products,Precaution
+Psoriasis,Topical corticosteroids,Treatment
+Psoriasis,Phototherapy,Treatment
+Psoriasis,Immunosuppressants,Treatment
+Psoriasis,Biologic drugs,Treatment
+Hypothyroidism,Monitor thyroid levels,Precaution
+Hypothyroidism,Eat iodine-rich foods,Precaution
+Hypothyroidism,Stay active,Precaution
+Hypothyroidism,Follow prescribed medication regimen,Precaution
+Hypothyroidism,Thyroid hormone replacement therapy,Treatment
+Hypothyroidism,Regular thyroid function tests,Treatment
+Hypothyroidism,Lifestyle modifications,Treatment
+Allergy,Avoid allergens,Precaution
+Allergy,Use air purifiers,Precaution
+Allergy,Keep surroundings clean,Precaution
+Allergy,Wear a mask in dusty environments,Precaution
+Allergy,Antihistamines,Treatment
+Allergy,Nasal sprays,Treatment
+Allergy,Allergy shots,Treatment
+Allergy,Avoidance of triggers,Treatment
+Drug Reaction,Inform doctors about allergies,Precaution
+Drug Reaction,Avoid self-medication,Precaution
+Drug Reaction,Read labels before taking medicine,Precaution
+Drug Reaction,Monitor side effects,Precaution
+Drug Reaction,Discontinue the drug,Treatment
+Drug Reaction,Antihistamines,Treatment
+Drug Reaction,Corticosteroids,Treatment
+Drug Reaction,Epinephrine for severe reactions,Treatment
+Diabetes,Monitor blood sugar levels,Precaution
+Diabetes,Follow a healthy diet,Precaution
+Diabetes,Exercise regularly,Precaution
+Diabetes,Avoid sugary foods,Precaution
+Diabetes,Insulin therapy,Treatment
+Diabetes,Oral medications,Treatment
+Diabetes,Lifestyle changes,Treatment
+Diabetes,Regular medical check-ups,Treatment
+Hypoglycemia,"Eat small, frequent meals",Precaution
+Hypoglycemia,Monitor blood sugar levels,Precaution
+Hypoglycemia,Avoid excessive alcohol,Precaution
+Hypoglycemia,Carry glucose tablets,Precaution
+Hypoglycemia,Consume fast-acting carbohydrates,Treatment
+Hypoglycemia,Intravenous glucose in severe cases,Treatment
+Hypoglycemia,Adjust diabetes medications,Treatment
