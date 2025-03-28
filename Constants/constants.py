@@ -1,4 +1,5 @@
 import os
+
 # Default Paths and parameter for PredictDisease class
 HOST='127.0.0.1'
 PORT=8000
