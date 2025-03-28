@@ -1,7 +1,6 @@
 import sys
 import subprocess
 
-
 if len(sys.argv) > 1:
     if (sys.argv[1] == '0' or sys.argv[1]=='push'):
         if (sys.argv[2] and sys.argv[2]!=''):

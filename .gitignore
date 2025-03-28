@@ -22,4 +22,4 @@ Thumbs.db
 
 # file names
 .gitignore
-./pullCommand.py
+./updateFolder.py
