@@ -1,0 +1,25 @@
+# Ignore Conda environment folder (if created locally)
+env/
+MedAiModel/
+
+# Ignore Conda lock and package metadata
+conda-meta/
+*.conda
+*.lock
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore VS Code settings (if using VS Code)
+.vscode/
+
+# file names
+.gitignore
+./pullCommand.py
